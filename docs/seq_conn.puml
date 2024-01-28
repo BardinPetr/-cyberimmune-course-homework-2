@@ -1,0 +1,58 @@
+@startuml
+title "Негативный сценарий 1. Связь\nНарушение ЦБ№1,2,3"
+
+autonumber
+
+actor "Покупатель" as client
+actor "Оператор" as seller
+participant "Клавиатура" as kb
+participant "Центральная\nсистема\nуправления" as sys
+participant "Экран" as screen
+participant "Связь" as conn #red
+'participant "Контроль\nАКБ" as batt
+participant "NFC чип" as nfc
+participant "Принтер" as printer
+'participant "Карт-ридер" as card
+participant "Процессинговый\nцентр" as proc
+
+note over sys
+терминал уже включён и готов к работе
+end note
+
+group Инициация транзакции
+seller -> kb: ввод информации
+kb -> sys++: новая транзакция
+
+sys -> screen: старт авторизации транзакции
+screen -> seller: старт авторизации транзакции
+seller -> client: старт авторизации
+end
+group Авторизация транзакции
+client -> nfc++: карта/гаджет
+nfc -> sys--: id клиента
+sys -> conn++: запрос авторизации транзакции
+note over conn #orange
+подмена данных транзакции
+end note
+note over conn #red
+передача содержимого транзакции
+третьим лицам
+end note
+conn -[#red]> proc++: запрос авторизации транзакции
+proc -[#red]> proc: контроль транзакции
+proc --[#red]> conn--: транзакция авторизована
+note over conn #red
+подмена статуса транзакции
+end note
+conn --[#red]> sys--: транзакция авторизована
+sys -[#red]> screen--: транзакция авторизована
+screen -[#red]> seller:  транзакция авторизована
+end
+group #red Финализация транзакции
+seller -> kb: печать квитанции
+kb -> sys: печать квитанции
+sys -> printer--: печать квитанции
+activate printer
+printer -> client--: квитанция
+end
+@enduml

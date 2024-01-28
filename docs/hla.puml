@@ -1,0 +1,61 @@
+@startuml
+
+actor User as U
+actor Operator as O
+
+rectangle "Payment system" {
+    usecase "Certification\nauthority" as CA #lawngreen
+    usecase "Processing\nCenter" as proc #lawngreen
+
+    proc <-[#lawngreen]> CA
+}
+
+rectangle "POS Terminal" {
+    usecase "Communication\n(C)" as comm #red
+    usecase "Screen\n(S)" as screen #red
+    usecase "NFC\n(C)" as nfc #red
+    usecase "Card-reader\n(C)" as card #red
+'    usecase "Power control" as batt #red
+'    usecase "Central system" as central #red
+
+    usecase "Response\nverification\n(M)" as ver #yellow
+    usecase "ID provider\n(M)" as idp #yellow
+    usecase "Risk management\n(C)" as rm #yellow
+
+    usecase "Printer\n(S)" as printer #lawngreen
+    usecase "Keyboard\n(S)" as kb #lawngreen
+    usecase "Request builder\n(M)" as rb #lawngreen
+    usecase "Transaction\ndata storage\n(S)" as tds #lawngreen
+}
+
+CA .[#lawngreen].> ver
+CA .[#lawngreen].> idp
+
+U ...[#red]> nfc
+U ..[#red]> card
+U ..[#red]> kb
+O .[#lawngreen]> kb
+
+nfc  --[#red]> idp
+card --[#red]> idp
+
+kb -[#lawngreen]-> tds : Amount
+kb -[#lawngreen]-> rm : PIN
+
+idp -[#lawngreen]-> rm
+
+rm -[#lawngreen]> rb
+
+proc <--[#red]-> comm
+comm --[#red]-> ver
+ver --[#lawngreen]> printer
+ver --[#lawngreen]> screen
+
+legend right
+| Цвет          | Тип                               |#| Обозначение | Тип |
+| <#lawngreen>  | Доверенный компонент              |#| S | Simple |
+| <#red>        | Недоверенный компонент            |#| M | Medium |
+| <#yellow>     | Компонент повышающий целостность  |#| C | Complex |
+end legend
+
+@enduml
