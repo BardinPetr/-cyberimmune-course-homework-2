@@ -24,7 +24,7 @@ rectangle "POS Terminal" {
 
     usecase "Printer\n(S)" as printer #lawngreen
     usecase "Keyboard\n(S)" as kb #lawngreen
-    usecase "Request builder\n(M)" as rb #lawngreen
+    usecase "Authentication\n(M)" as auth #lawngreen
     usecase "Transaction\ndata storage\n(S)" as tds #lawngreen
 }
 
@@ -36,15 +36,19 @@ U ..[#red]> card
 U ..[#red]> kb
 O .[#lawngreen]> kb
 
-nfc  --[#red]> idp
-card --[#red]> idp
+nfc  <--[#red]> idp
+card <--[#red]> idp
 
 kb -[#lawngreen]-> tds : Amount
-kb -[#lawngreen]-> rm : PIN
+kb --[#lawngreen]-> rm : PIN
 
-idp -[#lawngreen]-> rm
+tds --[#lawngreen]> rm
+idp <--[#lawngreen]> rm
 
-rm -[#lawngreen]> rb
+tds --[#lawngreen]> auth
+rm -[#lawngreen]> auth
+auth --[#lawngreen]> comm
+ver --[#lawngreen]> auth
 
 proc <--[#red]-> comm
 comm --[#red]-> ver
