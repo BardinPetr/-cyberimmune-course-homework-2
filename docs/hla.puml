@@ -6,26 +6,26 @@ actor Operator as O
 rectangle "Payment system" {
     usecase "Certification\nauthority" as CA #lawngreen
     usecase "Processing\nCenter" as proc #lawngreen
+    usecase "Authentication" as proca #yellow
 
-    proc <-[#lawngreen]> CA
+    proca <-[#lawngreen]> proc
+    proc <.[#lawngreen]> CA
 }
 
 rectangle "POS Terminal" {
-    usecase "Communication\n(C)" as comm #red
-    usecase "Screen\n(S)" as screen #red
-    usecase "NFC\n(C)" as nfc #red
-    usecase "Card-reader\n(C)" as card #red
-'    usecase "Power control" as batt #red
-'    usecase "Central system" as central #red
+    usecase "Communication\n(CM)" as comm #red
+    usecase "Screen\n(SS)" as screen #red
+    usecase "NFC\n(MS)" as nfc #red
+    usecase "Card-reader\n(MS)" as card #red
 
-    usecase "Response\nverification\n(M)" as ver #yellow
-    usecase "ID provider\n(M)" as idp #yellow
-    usecase "Risk management\n(C)" as rm #yellow
+    usecase "Response\nverification\n(SM)" as ver #yellow
+    usecase "ID provider\n(ML)" as idp #yellow
+    usecase "Risk management\n(CM)" as rm #lawngreen
 
-    usecase "Printer\n(S)" as printer #lawngreen
-    usecase "Keyboard\n(S)" as kb #lawngreen
-    usecase "Authentication\n(M)" as auth #lawngreen
-    usecase "Transaction\ndata storage\n(S)" as tds #lawngreen
+    usecase "Printer\n(SS)" as printer #lawngreen
+    usecase "Keyboard\n(SS)" as kb #lawngreen
+    usecase "Authentication\n(MM)" as auth #lawngreen
+    usecase "Transaction\ndata storage\n(SS)" as tds #lawngreen
 }
 
 CA .[#lawngreen].> ver
@@ -50,16 +50,16 @@ rm -[#lawngreen]> auth
 auth --[#lawngreen]> comm
 ver --[#lawngreen]> auth
 
-proc <--[#red]-> comm
+proca <--[#red]-> comm
 comm --[#red]-> ver
 ver --[#lawngreen]> printer
 ver --[#lawngreen]> screen
 
 legend right
-| Цвет          | Тип                               |#| Обозначение | Тип |
-| <#lawngreen>  | Доверенный компонент              |#| S | Simple |
-| <#red>        | Недоверенный компонент            |#| M | Medium |
-| <#yellow>     | Компонент повышающий целостность  |#| C | Complex |
+| Цвет          | Тип                               |#| Обозначение | Сложность|# |Обозначение | Объем |
+| <#lawngreen>  | Доверенный компонент              |#| S | Simple  |#| S|Small|
+| <#red>        | Недоверенный компонент            |#| M | Medium  |#| M|Medium|
+| <#yellow>     | Компонент повышающий целостность  |#| C | Complex |#| L|Large|
 end legend
 
 @enduml
