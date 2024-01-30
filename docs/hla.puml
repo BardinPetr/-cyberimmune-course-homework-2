@@ -36,21 +36,25 @@ U ..[#red]> card
 U ..[#red]> kb
 O .[#lawngreen]> kb
 
-nfc  <--[#red]> idp
-card <--[#red]> idp
+nfc  --[#red]> idp
+nfc  <--[#lawngreen] idp
+card --[#red]> idp
+card <--[#lawngreen] idp
 
 kb -[#lawngreen]-> tds : Amount
 kb --[#lawngreen]-> rm : PIN
 
 tds --[#lawngreen]> rm
-idp <--[#lawngreen]> rm
+idp --[#lawngreen]> rm
+idp <--[#lawngreen] rm
 
 tds --[#lawngreen]> auth
 rm -[#lawngreen]> auth
 auth --[#lawngreen]> comm
 ver --[#lawngreen]> auth
 
-proca <--[#red]-> comm
+proca <--[#red]- comm
+proca --[#lawngreen]-> comm
 comm --[#red]-> ver
 ver --[#lawngreen]> printer
 ver --[#lawngreen]> screen
